@@ -4,7 +4,7 @@ import {fetchOnePokemon, getTotalPokemonCount} from "../services/fetch";
 const PokemonTeamContext = createContext()
 
 export function PokemonTeamProvider (props) {
-    const [pokemonTeam, setPokemonTeam] = useState([])
+    const [pokemonTeam, setPokemonTeam] = useState(JSON.parse(localStorage.getItem('pokemonTeam')) || [])
     const generateTeam = useCallback(async ()=>{
         const team = []
         const totalPokemon = await getTotalPokemonCount()
@@ -14,7 +14,7 @@ export function PokemonTeamProvider (props) {
             team.push(fetchedPokemon)
         }
         console.log(team)
-
+        localStorage.setItem('pokemonTeam', JSON.stringify(team))
         setPokemonTeam(team)
     }, [setPokemonTeam])
 
