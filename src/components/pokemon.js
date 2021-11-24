@@ -4,18 +4,23 @@ import {fetchOnePokemon, getTotalPokemonCount} from "../services/fetch";
 import {PokemonCard} from "./generalComponents/Cards";
 
 export function PokemonButton () {
-    const [pokemon, setPokemon] = useState({})
+    const [pokemonTeam, setPokemonTeam] = useState([])
 
-    const getPokemon = async () => {
+    const createTeam = async () => {
+        const team = []
         const totalPokemon = await getTotalPokemonCount()
-        const fetchedPokemon = await fetchOnePokemon(Math.round(Math.random() * totalPokemon))
-        console.log(fetchedPokemon)
-        setPokemon(fetchedPokemon)
+
+        for (let i = 0; i < 6; i++) {
+            const fetchedPokemon = await fetchOnePokemon(Math.round(Math.random() * totalPokemon))
+            team.push(fetchedPokemon)
+        }
+        console.log(team)
+
+        setPokemonTeam(team)
     }
 
     return <>
-        <Button onClick={()=>getPokemon()}>get pokemon</Button>
-        <Button onClick={()=>console.log(pokemon)}>log</Button>
-        {pokemon.name && <PokemonCard pokemon={pokemon}/>}
+        <Button onClick={()=>createTeam()}>getTeam</Button>
+        {pokemonTeam.length > 0 && pokemonTeam.map((p, i)=><PokemonCard pokemon={p} key={i}/>)}
     </>
 }
