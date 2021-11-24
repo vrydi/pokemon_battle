@@ -12,7 +12,7 @@ function getFourMoves(moves){
 }
 
 function getAbility(abilities) {
-    return abilities[Math.round(Math.random() * abilities.length)].ability
+    return abilities[Math.round(Math.random() * abilities.length)]
 }
 
 export async function fetchOnePokemon(id) {
@@ -28,8 +28,8 @@ export async function fetchOnePokemon(id) {
             health: data.stats[0],
             attack: data.stats[1],
             defense: data.stats[2],
-            special_attack: data.stats[3],
-            special_defense: data.stats[4],
+            'special attack': data.stats[3],
+            'special defense': data.stats[4],
             speed: data.stats[5],
         }
     };
