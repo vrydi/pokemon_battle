@@ -8,18 +8,15 @@ async function getFourMoves(moves) {
     let result = []
     for (let i = 0; i < 4; i++) {
         const move = moves[Math.round(Math.random() * (moves.length - 1))].move
-        console.log(move)
         const moveStat = await getMoveInfo(move.url)
         result.push({...moveStat, name: move.name})
-        console.log(moveStat)
     }
-    console.log('result')
-    console.log(result)
     return result
 }
 
-function getAbility(abilities) {
-    return abilities[Math.round(Math.random() * abilities.length)]
+async function getAbility(abilities) {
+    const ability = abilities[Math.round(Math.random() * (abilities.length -1))]
+    return await getAbilityInfo(ability.ability.url)
 }
 
 export async function generatePokemonTeam() {
@@ -40,7 +37,7 @@ export async function fetchOnePokemon(id) {
         id: String(data.id),
         name: data.name,
         image: getImage(data),
-        ability: getAbility(data.abilities),
+        ability: await getAbility(data.abilities),
         moves: await getFourMoves(data.moves),
         stats: {
             health: data.stats[0],
@@ -73,5 +70,15 @@ export async function getMoveInfo(url){
         'effect description': data.effect_entries[0].effect,
         power: data.power,
         target: data.target
+    }
+}
+
+export async function getAbilityInfo(url){
+    const response = await fetch(url)
+    const data = await response.json().then()
+    return {
+        name: data.name,
+        id: data.id,
+        description: data.flavor_text_entries.filter(text=> text['language']['name']==='en')
     }
 }

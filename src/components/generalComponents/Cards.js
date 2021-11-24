@@ -18,7 +18,6 @@ export function PokemonCard (props) {
                         <h5>Moves : </h5>
                         <ListGroup className={'list-group-flush'}>
                             {pokemon.moves.map((m, i)=>{
-                                //noinspection ALL
                                 return <>{m.description.length > 0 && <OverlayTrigger key={i} overlay={
                                         <Tooltip>
                                             {m.description[0].flavor_text}
@@ -29,8 +28,14 @@ export function PokemonCard (props) {
                             })}
                         </ListGroup>
                         <Card.Text>
-                            {pokemon.ability && <span><span className={'h5'}>Ability</span> : {pokemon.ability.ability.name}</span>}
-
+                            {pokemon.ability && <OverlayTrigger overlay={
+                                <Tooltip>
+                                    {pokemon.ability.description[0].flavor_text}
+                                </Tooltip>
+                            } placement={'top'} defaultShow={false} delay={500}>
+                                <span><span className={'h5'}>Ability</span> : {pokemon.ability.name}</span>
+                            </OverlayTrigger>
+                                }
                         </Card.Text>
                         <h5>Stats :</h5>
                         <ListGroup className={'list-group-flush'}>
