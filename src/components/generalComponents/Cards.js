@@ -8,7 +8,7 @@ export function PokemonCard (props) {
                       src={pokemon.image}/>
             <Card.Body>
                 <Card.Title>
-                    <h3 className={'text-capitalize'}>{pokemon.name}</h3>
+                    <h2 className={'text-capitalize'}>{pokemon.name} {pokemon.types.map((t, i)=> <small className={'text-muted'} key={i}>{t.type.name}</small>)}</h2>
                 </Card.Title>
                 <h5>Moves : </h5>
                 <ListGroup className={'list-group-flush'}>
