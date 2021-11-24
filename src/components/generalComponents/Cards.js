@@ -1,4 +1,4 @@
-import {Button, Card, ListGroup, ListGroupItem} from "react-bootstrap";
+import {Button, Card, ListGroup, ListGroupItem, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {useState} from "react";
 
 export function PokemonCard (props) {
@@ -18,7 +18,14 @@ export function PokemonCard (props) {
                         <h5>Moves : </h5>
                         <ListGroup className={'list-group-flush'}>
                             {pokemon.moves.map((m, i)=>{
-                                return <ListGroupItem key={i}>{m.move.name}</ListGroupItem>
+                                //noinspection ALL
+                                return <>{m.description.length > 0 && <OverlayTrigger key={i} overlay={
+                                        <Tooltip>
+                                            {m.description[0].flavor_text}
+                                        </Tooltip>
+                                    } placement={'top'} defaultShow={false} delay={500}>
+                                        <ListGroupItem className={'text-capitalize'}>{m.name}</ListGroupItem>
+                                    </OverlayTrigger>}</>
                             })}
                         </ListGroup>
                         <Card.Text>
