@@ -3,8 +3,9 @@ import {PokemonCard} from "./generalComponents/Cards";
 import {usePokemonTeamContext} from "../contexts/PokemonTeamContext";
 
 export function PokemonSection() {
-    return <Container fluid className={'px-5'}>
-        <PokemonButton/>
+    const {pokemonTeam} = usePokemonTeamContext()
+    return <Container fluid className={'px-5 mt-3'}>
+        {pokemonTeam.length < 1 && <PokemonButton/>}
         <PokemonCards/>
     </Container>
 }
@@ -12,7 +13,7 @@ export function PokemonSection() {
 function PokemonButton () {
     const {generateTeam} = usePokemonTeamContext()
     return <div className={'text-center'}>
-        <Button className={'m-2'} onClick={()=>generateTeam()}>getTeam</Button>
+        <Button className={'m-2'} onClick={()=>generateTeam()}>Generate your team</Button>
     </div>
 }
 
