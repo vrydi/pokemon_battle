@@ -3,12 +3,13 @@ import {Card, ListGroup, ListGroupItem} from "react-bootstrap";
 export function PokemonCard (props) {
     const {pokemon} = props
     return <>
-        <Card style={{ width: '18rem' }}>
+        <Card>
             <Card.Img variant={'top'}
                       src={pokemon.image}/>
             <Card.Body>
                 <Card.Title>
-                    <h2 className={'text-capitalize'}>{pokemon.name} {pokemon.types.map((t, i)=> <small className={'text-muted'} key={i}>{t.type.name} </small>)}</h2>
+                    <h2 className={'text-capitalize'}>{pokemon.name}</h2>
+                    {pokemon.types.map((t, i)=> <small className={'text-muted'} key={i}>{t.type.name} </small>)}
                 </Card.Title>
                 <h5>Moves : </h5>
                 <ListGroup className={'list-group-flush'}>
