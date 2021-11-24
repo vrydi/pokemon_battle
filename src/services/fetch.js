@@ -4,7 +4,8 @@ function getImage(data) {
 
 function getFourMoves(moves){
     let result = []
-    for (let i = 0; i < 4; i++) {
+    const max = moves.length < 4 ? moves.length : 4
+    for (let i = 0; i < max; i++) {
         const move = moves[Math.round(Math.random() * moves.length)].move
         result.push({move})
     }
@@ -35,4 +36,10 @@ export async function fetchOnePokemon(id) {
         types: data.types,
         species: data.species.url
     };
+}
+
+export async function getTotalPokemonCount() {
+    const response = await fetch('https://pokeapi.co/api/v2/pokemon-species/?limit=0')
+    const data = await response.json()
+    return data.count
 }
