@@ -3,10 +3,11 @@ function getImage(data) {
 }
 
 function getFourMoves(moves){
+    if (moves.length < 1) return []
+    if (moves.length <=4) return moves
     let result = []
-    const max = moves.length < 4 ? moves.length : 4
-    for (let i = 0; i < max; i++) {
-        const move = moves[Math.round(Math.random() * moves.length)].move
+    for (let i = 0; i < 4; i++) {
+        const move = moves[Math.round(Math.random() * (moves.length -1))].move
         result.push({move})
     }
     return result
@@ -19,6 +20,7 @@ function getAbility(abilities) {
 export async function fetchOnePokemon(id) {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
     const data = await response.json();
+    console.log(data)
     return {
         id: String(data.id),
         name: data.name,
