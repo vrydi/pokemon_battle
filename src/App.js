@@ -3,6 +3,7 @@ import {Navigation} from "./components/Navigation";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {PokemonSection} from "./components/pokemon";
 import {PokemonTeamProvider} from "./contexts/PokemonTeamContext";
+import {EnemyPokemonTeamProvider} from "./contexts/EnemyPokemonTeam";
 
 
 function ProvidedApp() {
@@ -15,7 +16,9 @@ function ProvidedApp() {
 function App() {
   return (
     <PokemonTeamProvider>
-        <ProvidedApp/>
+        <EnemyPokemonTeamProvider>
+            <ProvidedApp/>
+        </EnemyPokemonTeamProvider>
     </PokemonTeamProvider>
   );
 }

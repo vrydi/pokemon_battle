@@ -17,6 +17,16 @@ function getAbility(abilities) {
     return abilities[Math.round(Math.random() * abilities.length)]
 }
 
+export async function generatePokemonTeam() {
+    const totalPokemon = await getTotalPokemonCount()
+    const team = []
+    for (let i = 0; i < 6; i++) {
+        const fetchedPokemon = await fetchOnePokemon(Math.round(Math.random() * totalPokemon))
+        team.push(fetchedPokemon)
+    }
+    return team
+}
+
 export async function fetchOnePokemon(id) {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
     const data = await response.json();

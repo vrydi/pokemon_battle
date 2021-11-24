@@ -1,27 +1,26 @@
 import {createContext, useCallback, useContext, useMemo, useState} from "react";
-import {fetchOnePokemon, getTotalPokemonCount} from "../services/fetch";
+import {generatePokemonTeam} from "../services/fetch";
 
 const PokemonTeamContext = createContext()
 
 export function PokemonTeamProvider (props) {
     const [pokemonTeam, setPokemonTeam] = useState(JSON.parse(localStorage.getItem('pokemonTeam')) || [])
-    const generateTeam = useCallback(async ()=>{
-        const team = []
-        const totalPokemon = await getTotalPokemonCount()
+    const [tries, setTries] = useState(localStorage.getItem('tries') || 3)
 
-        for (let i = 0; i < 6; i++) {
-            const fetchedPokemon = await fetchOnePokemon(Math.round(Math.random() * totalPokemon))
-            team.push(fetchedPokemon)
-        }
+    const generateTeam = useCallback(async ()=>{
+        const team = await generatePokemonTeam()
         console.log(team)
         localStorage.setItem('pokemonTeam', JSON.stringify(team))
+        setTries(tries-1)
+        localStorage.setItem('tries', tries)
         setPokemonTeam(team)
-    }, [setPokemonTeam])
+    }, [setPokemonTeam, tries, setTries])
 
     const api = useMemo(()=>({
         pokemonTeam,
-        generateTeam
-    }),[pokemonTeam, generateTeam])
+        generateTeam,
+        tries
+    }),[pokemonTeam, generateTeam, tries])
 
     return <PokemonTeamContext.Provider value={api}>
         {props.children}

@@ -3,9 +3,9 @@ import {PokemonCard} from "./generalComponents/Cards";
 import {usePokemonTeamContext} from "../contexts/PokemonTeamContext";
 
 export function PokemonSection() {
-    const {pokemonTeam} = usePokemonTeamContext()
+    const {tries} = usePokemonTeamContext()
     return <Container fluid className={'px-5 mt-3'}>
-        {pokemonTeam.length < 1 && <PokemonButton/>}
+        {tries > 0 && <PokemonButton/>}
         <PokemonCards/>
     </Container>
 }
