@@ -40,6 +40,7 @@ export async function fetchOnePokemon(id) {
         ability: await getAbility(data.abilities),
         moves: await getFourMoves(data.moves),
         stats: {
+            currentHeath: data.stats[0],
             health: data.stats[0],
             attack: data.stats[1],
             defense: data.stats[2],

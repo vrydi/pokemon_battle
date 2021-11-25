@@ -60,7 +60,7 @@ function ListItemStat(props){
     return <ListGroupItem className={'text-capitalize'}>{`${name} : ${value.base_stat}`}</ListGroupItem>
 }
 
-const GetGender = (gender) => {
+export const GetGender = (gender) => {
     switch (gender) {
         case 'genderless':
             return 'genderless'
