@@ -1,16 +1,20 @@
 import {Button, Card, ListGroup, ListGroupItem, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {useState} from "react";
+import {MDBIcon} from "mdbreact";
 
 export function PokemonCard (props) {
     const {pokemon} = props
     const [open, setOpen] = useState(false)
+
+    const gender = GetGender(pokemon.gender)
+
     return <>
         <Card>
             <Card.Img variant={'top'}
                       src={pokemon.image}/>
             <Card.Body>
                 <Card.Title>
-                    <h2 className={'text-capitalize'}>{pokemon.name}</h2>
+                    <h2 className={'text-capitalize'}>{pokemon.name} <MDBIcon icon={gender}/></h2>
                     {pokemon.types.map((t, i)=> <small className={'text-muted'} key={i}>{t.type.name} </small>)}
                 </Card.Title>
                 {open &&
@@ -54,4 +58,17 @@ export function PokemonCard (props) {
 function ListItemStat(props){
     const {name, value} = props;
     return <ListGroupItem className={'text-capitalize'}>{`${name} : ${value.base_stat}`}</ListGroupItem>
+}
+
+const GetGender = (gender) => {
+    switch (gender) {
+        case 'genderless':
+            return 'genderless'
+        case 'male' :
+            return 'mars'
+        case 'female' :
+            return 'venus'
+        default :
+            return "genderless"
+    }
 }

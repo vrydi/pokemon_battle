@@ -48,8 +48,15 @@ export async function fetchOnePokemon(id) {
             speed: data.stats[5],
         },
         types: data.types,
-        species: data.species.url
+        species: data.species.url,
+        gender: await getGender(data.name)
     };
+}
+
+async function getGender(name) {
+    const response = await  fetch(`https://pokeapi.co/api/v2/gender/?name=${name}`)
+    const data = await response.json()
+    return data.results[Math.round(Math.random() * (data.results.length-1))].name
 }
 
 export async function getTotalPokemonCount() {

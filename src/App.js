@@ -5,6 +5,9 @@ import {PokemonSection} from "./components/pokemon";
 import {PokemonTeamProvider} from "./contexts/PokemonTeamContext";
 import {EnemyPokemonTeamProvider} from "./contexts/EnemyPokemonTeam";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap-css-only/css/bootstrap.min.css';
+import 'mdbreact/dist/css/mdb.css';
 
 function DefaultComp(props) {
     return <div className="App">
@@ -15,7 +18,7 @@ function DefaultComp(props) {
 
 function ProvidedApp() {
     return <Switch>
-            <Route path={'battle'}>
+            <Route path={'/battle'}>
                 <DefaultComp>
                 </DefaultComp>
             </Route>
