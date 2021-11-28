@@ -1,0 +1,65 @@
+@font-face {
+    font-family: "Pokemon GB";
+    src: url("//db.onlinewebfonts.com/t/831e1f4da157d96bc996f8c9f5f1e578.eot");
+    src: url("//db.onlinewebfonts.com/t/831e1f4da157d96bc996f8c9f5f1e578.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/831e1f4da157d96bc996f8c9f5f1e578.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/831e1f4da157d96bc996f8c9f5f1e578.woff") format("woff"), url("//db.onlinewebfonts.com/t/831e1f4da157d96bc996f8c9f5f1e578.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/831e1f4da157d96bc996f8c9f5f1e578.svg#Pokemon GB") format("svg");
+}
+
+#battle {
+    font-family: "Pokemon GB", serif;
+    background-color: aqua;
+}
+
+.pokemon-card {
+    max-width: 20rem;
+    border-radius: 25px 10px !important;
+    border: 4px solid #2d4416 !important;
+    z-index: 100;
+}
+
+.poke-image {
+    z-index: 50;
+}
+
+.bg-green {
+    background-color: #526759;
+}
+
+.text-yellow {
+    color: #f8af41;
+}
+
+.bg-yellow {
+    background-color: #f8af41;
+}
+
+.bg-beige {
+    background-color: #ececcb !important;
+}
+
+.card-arrow {
+    background: linear-gradient(to bottom left, transparent 48%, #526759 48%);
+    border-radius: 25px 0 0 25px;
+    height: 3rem;
+    top: -2rem;
+}
+
+.poke-stadia {
+    top: -4rem;
+    z-index: 1;
+}
+
+.mirror {
+    transform: scaleX(-1);
+}
+
+.battle-option-screen {
+    z-index: 100;
+}
+
+.battle-screen {
+    overflow: hidden;
+}
+
+.battle-option-text {
+    min-height: 5rem;
+}
