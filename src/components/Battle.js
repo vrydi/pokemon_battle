@@ -16,13 +16,29 @@ export function BattleSection(){
                         <div className={'position-relative w-75 mx-auto'}
                             style={{background: 'linear-gradient(to bottom left, rgba(255,255,255,0) 48%, #526759 48%)', borderRadius: '25px 0 0 25px', height: '3rem', top: '-2rem'}}/>
                     </Row>
-                    <Row>
-                        <img className={'w-75 mt-5'} src={activePokemon.image} alt=""/>
+                    <Row >
+                        <img style={{zIndex: '10'}} className={'w-75 mt-5'} src={activePokemon.image} alt=""/>
+                    </Row>
+                    <Row style={{height: '25px'}}>
+                        <img
+                            src="https://firebasestorage.googleapis.com/v0/b/pokemon-battle-f40d2.appspot.com/o/battle_podia.png?alt=media&token=21348cd1-ea50-4ea2-ab4c-c9d4ba6d6042"
+                            alt=""
+                            className={'w-75 position-relative'}
+                            style={{top: '-4rem', zIndex: '0'}}
+                        />
                     </Row>
                 </Col>
                 <Col lg={6}>
-                    <Row>
-                        <img className={'w-75 mt-5 ms-auto'} src={activePokemon.image} style={{transform: 'scaleX(-1)'}} alt=""/>
+                    <Row >
+                        <img className={'w-75 mt-5 ms-auto'} src={activePokemon.image} style={{transform: 'scaleX(-1)', zIndex: '10'}} alt=""/>
+                    </Row>
+                    <Row style={{height: '25px'}}>
+                        <img
+                            src="https://firebasestorage.googleapis.com/v0/b/pokemon-battle-f40d2.appspot.com/o/battle_podia.png?alt=media&token=21348cd1-ea50-4ea2-ab4c-c9d4ba6d6042"
+                            alt=""
+                            className={'w-75 position-relative ms-auto'}
+                            style={{top: '-4rem', zIndex: '0', transform: 'scaleX(-1)'}}
+                        />
                     </Row>
                     <Row>
                         <NameSection pokemon={activePokemon} className={'ms-auto'} friend={true}/>
