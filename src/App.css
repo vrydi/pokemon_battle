@@ -7,6 +7,7 @@
 #battle {
     font-family: "Pokemon GB", serif;
     background-color: aqua;
+    height: 650px;
 }
 
 .pokemon-card {
@@ -29,7 +30,7 @@
 }
 
 .bg-yellow {
-    background-color: #f8af41;
+    background-color: #f8af41 !important;
 }
 
 .bg-beige {
