@@ -32,6 +32,7 @@ export async function generatePokemonTeam() {
 export async function fetchOnePokemon(id) {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
     const data = await response.json();
+    if (data.moves.length < 1) await fetchOnePokemon(id)
     console.log(data)
     return {
         id: String(data.id),
