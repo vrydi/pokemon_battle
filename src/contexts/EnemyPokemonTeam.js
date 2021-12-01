@@ -1,11 +1,13 @@
 import {createContext, useCallback, useContext, useMemo, useState} from "react";
+import {generatePokemonTeam} from "../services/fetch";
 
 const EnemyPokemonTeamContext = createContext()
 
 export function EnemyPokemonTeamProvider (props) {
     const [enemyPokemonTeam, setEnemyPokemonTeam] = useState(JSON.parse(localStorage.getItem('enemyPokemonTeam')) || [])
-    const generateTeam = useCallback(async ()=>{
-        const team = await generateTeam()
+
+    const generateEnemyTeam = useCallback(async ()=>{
+        const team = await generatePokemonTeam()
         console.log(team)
         localStorage.setItem('enemyPokemonTeam', JSON.stringify(team))
         setEnemyPokemonTeam(team)
@@ -13,8 +15,8 @@ export function EnemyPokemonTeamProvider (props) {
 
     const api = useMemo(()=>({
         enemyPokemonTeam,
-        generateTeam
-    }),[enemyPokemonTeam, generateTeam])
+        generateEnemyTeam
+    }),[enemyPokemonTeam, generateEnemyTeam])
 
     return <EnemyPokemonTeamContext.Provider value={api}>
         {props.children}

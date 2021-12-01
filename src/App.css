@@ -53,7 +53,6 @@
 }
 
 .battle-option-screen {
-    z-index: 100;
 }
 
 .battle-screen {
@@ -62,4 +61,24 @@
 
 .battle-option-text {
     min-height: 5rem;
+}
+
+.poke-option-button {
+    border-radius: 25px !important;
+}
+
+.fight {
+    background-color: #F8A9B1 !important;
+}
+
+.bag {
+    background-color: #E09828 !important;
+}
+
+.pokemon {
+    background-color: #57B128 !important;
+}
+
+.flee {
+    background-color: #2891C9 !important;
 }

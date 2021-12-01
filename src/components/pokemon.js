@@ -2,6 +2,7 @@ import {Button, Col, Container, Row, Spinner, Toast, ToastContainer} from "react
 import {PokemonCard} from "./generalComponents/Cards";
 import {usePokemonTeamContext} from "../contexts/PokemonTeamContext";
 import {useState} from "react";
+import {useEnemyPokemonTeamContext} from "../contexts/EnemyPokemonTeam";
 
 export function PokemonSection() {
     return <Container fluid className={'px-5 mt-3'}>
@@ -17,11 +18,13 @@ export function PokemonSection() {
 
 function PokemonButton () {
     const {generateTeam, tries} = usePokemonTeamContext()
+    const {generateEnemyTeam} = useEnemyPokemonTeamContext()
     const [message, setMessage] = useState('Generate your team')
     const [showToast, setShowToast] = useState(false)
 
     const clickButton = () => {
         setMessage('Generating...')
+        generateEnemyTeam()
         generateTeam().then(()=>{
             setMessage('Generate your team')
             setShowToast(true)
