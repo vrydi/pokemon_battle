@@ -4,13 +4,14 @@ import {useState} from "react";
 import {GetGender} from "./generalComponents/Cards";
 import {MDBIcon} from "mdbreact";
 import {useEnemyPokemonTeamContext} from "../contexts/EnemyPokemonTeam";
+import {Link, useHistory} from "react-router-dom";
 
 export function BattleSection(){
     const {pokemonTeam} = usePokemonTeamContext()
     const {enemyPokemonTeam} = useEnemyPokemonTeamContext()
     const [activePokemon, setActivePokemon] = useState(pokemonTeam[0])
     const [activeEnemyPokemon, setActiveEnemyPokemon] = useState(enemyPokemonTeam[0])
-
+    const [pokeMenu, setPokeMenu] = useState('start')
 
     return <section>
         <Container id={'battle'} className={'p-0'}>
@@ -48,23 +49,20 @@ export function BattleSection(){
                     </Row>
                 </Col>
             </div>
-            <PokeOptions activePokemon={activePokemon} setActivePokemon={setActivePokemon}/>
+            {pokeMenu === 'start' && <PokeOptions activePokemon={activePokemon} setPokeMenu={setPokeMenu}/>}
         </Container>
     </section>
 }
 
 function PokeOptions (props) {
-    const {activePokemon} = props
-    const [buttons, setButtons] = useState(['fight', 'pokemon', 'bag', 'flee'])
+    const {activePokemon, setPokeMenu} = props
+    // const [buttonElement, setButtonElement] = useState(<PokeStartButton buttons={['fight', 'pokemon', 'bag', 'flee']}/>)
     const [message, setMessage] = useState(`What will ${activePokemon.name} do?`)
 
     return <div className={'p-2 bg-green battle-option-screen m-0 d-flex'}>
         <PokeMessage message={message}/>
         <Col lg={6} className={'m-0 bg-beige row rounded-3'}>
-            {buttons.map((b, i) => <PokeButton button={b} key={i}
-                                               setButtons={setButtons}
-                                               setMessage={setMessage}
-                                               activePokemon={activePokemon}/>)}
+            <PokeStartButton buttons={['fight', 'pokemon', 'bag', 'flee']} setMessage={setMessage} setPokeMenu={setPokeMenu}/>
         </Col>
     </div>
 }
@@ -91,28 +89,27 @@ function PokeMessage(props){
     </Col>
 }
 
-function PokeButton(props) {
-    const {button, setButtons, setMessage, activePokemon} = props
+function PokeStartButton(props) {
+    const {buttons, setMessage, setPokeMenu} = props
+    const history = useHistory()
 
-    const click = () => {
+    const click = (button) => {
         switch (button) {
             case 'fight' :
-                const moves = activePokemon.moves.map(m=>m.name)
-                setButtons(moves)
                 break
             case 'pokemon':
                 break
             case 'bag':
                 break
             case 'flee':
-                setButtons(['fight', 'pokemon', 'bag', 'flee'])
                 setMessage('you have fled')
+                setTimeout(function(){history.push('/')}, 1000)
                 break
         }
     }
-    return <Col lg={6}>
-        <button onClick={()=>click()} className={`poke-option-button w-100 btn ${button}`}>{button}</button>
-    </Col>
+    return <>
+        {buttons.map((button, i)=>{return <Col lg={6}><button onClick={()=>click(button)} key={i} className={`poke-option-button w-100 btn ${button}`}>{button}</button></Col>})}
+        </>
 }
 
 function NameSection(props) {
