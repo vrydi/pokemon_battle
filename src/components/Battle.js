@@ -1,4 +1,4 @@
-import {Button, Card, Col, Container, ProgressBar, Row} from "react-bootstrap";
+import {Button, Card, Col, Container, ListGroupItem, OverlayTrigger, ProgressBar, Row, Tooltip} from "react-bootstrap";
 import {usePokemonTeamContext} from "../contexts/PokemonTeamContext";
 import {useState} from "react";
 import {GetGender} from "./generalComponents/Cards";
@@ -22,7 +22,7 @@ export function BattleSection(){
                         <div className={'position-relative w-75 mx-auto card-arrow'}/>
                     </Row>
                     <Row >
-                        <img className={'w-75 mt-5 poke-image'} src={activePokemon.image} alt=""/>
+                        <img className={'w-75 mt-5 poke-image mirror'} src={activePokemon.image} alt=""/>
                     </Row>
                     <Row style={{height: '0'}}>
                         <img
@@ -60,12 +60,14 @@ function PokeOptions (props) {
     // const [buttonElement, setButtonElement] = useState(<PokeStartButton buttons={['fight', 'pokemon', 'bag', 'flee']}/>)
     const [message, setMessage] = useState(`What will ${activePokemon.name} do?`)
 
-    return <div className={'p-2 bg-green battle-option-screen m-0 d-flex'}>
-        <PokeMessage message={message}/>
-        <Col lg={6} className={'m-0 bg-beige row rounded-3'}>
-            <PokeStartButton buttons={['fight', 'pokemon', 'bag', 'flee']} setMessage={setMessage} setPokeMenu={setPokeMenu}/>
-        </Col>
-    </div>
+    return <RoundedDiv color={'bg-green'}>
+        <div className={'p-2 battle-option-screen m-0 d-flex'}>
+            <PokeMessage message={message}/>
+            <Col lg={6} className={'m-0 bg-beige row rounded-3'}>
+                <PokeStartButton buttons={['fight', 'pokemon', 'bag', 'flee']} setMessage={setMessage} setPokeMenu={setPokeMenu}/>
+            </Col>
+        </div>
+    </RoundedDiv>
 }
 
 function RoundedDiv(props) {
@@ -95,19 +97,28 @@ function PokeBattleButton(props) {
     console.log(moves)
 
     return <RoundedDiv color={'bg-green'}>
-        <Row col={2}>
-            {moves.map((move, i)=><PokeMoveButton key={i} move={move}/>)}
-        </Row>
+        <Container>
+            <Row col={2}>
+                {moves.map((move, i)=><PokeMoveButton key={i} move={move}/>)}
+            </Row>
+            <div><button onClick={()=>setPokeMenu('start')} className={'poke-option-button w-100 btn bg-light'}>Back</button></div>
+        </Container>
     </RoundedDiv>
 }
 
 function PokeMoveButton(props) {
     const {move} = props
     return <Col>
+        <OverlayTrigger overlay={
+            <Tooltip>
+                {move.description[0].flavor_text}
+            </Tooltip>
+        } placement={'top'} defaultShow={false} delay={500}>
         <button className={'poke-option-button w-100 btn bg-light'}>
             <div className={'font-weight-bold'}>{move.name}</div>
             <div className={'text-muted'}>{`${move.currentPP}/${move.pp}`}</div>
         </button>
+        </OverlayTrigger>
     </Col>
 }
 
@@ -131,7 +142,7 @@ function PokeStartButton(props) {
         }
     }
     return <>
-        {buttons.map((button, i)=>{return <Col lg={6}><button onClick={()=>click(button)} key={i} className={`poke-option-button w-100 btn ${button}`}>{button}</button></Col>})}
+        {buttons.map((button, i)=>{return <Col lg={6} key={i}><button onClick={()=>click(button)} className={`poke-option-button w-100 btn ${button}`}>{button}</button></Col>})}
         </>
 }
 

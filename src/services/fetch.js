@@ -23,7 +23,7 @@ export async function generatePokemonTeam() {
     const totalPokemon = await getTotalPokemonCount()
     const team = []
     for (let i = 0; i < 6; i++) {
-        const fetchedPokemon = await fetchOnePokemon(Math.round(Math.random() * totalPokemon))
+        const fetchedPokemon = await fetchOnePokemon(Math.round((Math.random() * (totalPokemon-1))+1))
         team.push(fetchedPokemon)
     }
     return team
