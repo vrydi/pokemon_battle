@@ -1,21 +1,22 @@
 import {
-    Badge,
+    Badge, Button,
     Card,
-    Col,
-    Container,
+    Col, Collapse,
+    Container, ListGroup, ListGroupItem, Modal,
     OverlayTrigger,
     ProgressBar,
     Row,
     Tooltip
 } from "react-bootstrap";
 import {usePokemonTeamContext} from "../contexts/PokemonTeamContext";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {GetGender} from "./generalComponents/Cards";
 import {MDBIcon} from "mdbreact";
 import {useEnemyPokemonTeamContext} from "../contexts/EnemyPokemonTeam";
 import {useHistory} from "react-router-dom";
+import {useBagContext} from "../contexts/bagContext";
 
-export function BattleSection(){
+export function BattleSection() {
     const {pokemonTeam} = usePokemonTeamContext()
     const {enemyPokemonTeam} = useEnemyPokemonTeamContext()
     const [activePokemon, setActivePokemon] = useState(pokemonTeam[0])
@@ -28,61 +29,216 @@ export function BattleSection(){
                                                          activePokemon={activePokemon}
                                                          setActivePokemon={setActivePokemon}
                                                          setPokeMenu={setPokeMenu}/> :
-                <>
-                    <div className={'d-flex battle-screen'}>
-                        <Col lg={6} className={'left-field'}>
-                            <Row className={'mt-3'}>
-                                <NameSection pokemon={activeEnemyPokemon}/>
-                                <div className={'position-relative w-75 mx-auto card-arrow'}/>
-                            </Row>
-                            <Row>
-                                <img className={'w-75 mt-5 poke-image mirror'} src={activePokemon.image} alt=""/>
-                            </Row>
-                            <Row style={{height: '0'}}>
-                                <img
-                                    src="https://firebasestorage.googleapis.com/v0/b/pokemon-battle-f40d2.appspot.com/o/battle_podia.png?alt=media&token=21348cd1-ea50-4ea2-ab4c-c9d4ba6d6042"
-                                    alt=""
-                                    className={'w-75 position-relative poke-stadia'}
-                                />
-                            </Row>
-                        </Col>
-                        <Col lg={6} className={'right-field'}>
-                            <Row>
-                                <img className={'w-75 mt-5 ms-auto mirror poke-image'} src={activeEnemyPokemon.image}
-                                     alt=""/>
-                            </Row>
-                            <Row style={{height: '25px'}}>
-                                <img
-                                    src="https://firebasestorage.googleapis.com/v0/b/pokemon-battle-f40d2.appspot.com/o/battle_podia.png?alt=media&token=21348cd1-ea50-4ea2-ab4c-c9d4ba6d6042"
-                                    alt=""
-                                    className={'w-75 position-relative ms-auto poke-stadia mirror'}
-                                />
-                            </Row>
-                            <Row>
-                                <NameSection pokemon={activePokemon} className={'ms-auto'} friend={true}/>
-                                <div className={'position-relative w-75 mx-auto card-arrow'}/>
-                            </Row>
-                        </Col>
-                    </div>
-                    {pokeMenu === 'start' && <PokeOptions activePokemon={activePokemon} setPokeMenu={setPokeMenu}/>}
-                    {pokeMenu === 'battle' && <PokeBattleButton moves={activePokemon.moves} setPokeMenu={setPokeMenu}/>}
-                </>
+                pokeMenu === 'bag' ? <BagScreen/> :
+                    <>
+                        <div className={'d-flex battle-screen'}>
+                            <Col lg={6} className={'left-field'}>
+                                <Row className={'mt-3'}>
+                                    <NameSection pokemon={activeEnemyPokemon}/>
+                                    <div className={'position-relative w-75 mx-auto card-arrow'}/>
+                                </Row>
+                                <Row>
+                                    <img className={'w-75 mt-5 poke-image mirror'} src={activePokemon.image} alt=""/>
+                                </Row>
+                                <Row style={{height: '0'}}>
+                                    <img
+                                        src="https://firebasestorage.googleapis.com/v0/b/pokemon-battle-f40d2.appspot.com/o/battle_podia.png?alt=media&token=21348cd1-ea50-4ea2-ab4c-c9d4ba6d6042"
+                                        alt=""
+                                        className={'w-75 position-relative poke-stadia'}
+                                    />
+                                </Row>
+                            </Col>
+                            <Col lg={6} className={'right-field'}>
+                                <Row>
+                                    <img className={'w-75 mt-5 ms-auto mirror poke-image'}
+                                         src={activeEnemyPokemon.image}
+                                         alt=""/>
+                                </Row>
+                                <Row style={{height: '25px'}}>
+                                    <img
+                                        src="https://firebasestorage.googleapis.com/v0/b/pokemon-battle-f40d2.appspot.com/o/battle_podia.png?alt=media&token=21348cd1-ea50-4ea2-ab4c-c9d4ba6d6042"
+                                        alt=""
+                                        className={'w-75 position-relative ms-auto poke-stadia mirror'}
+                                    />
+                                </Row>
+                                <Row>
+                                    <NameSection pokemon={activePokemon} className={'ms-auto'} friend={true}/>
+                                    <div className={'position-relative w-75 mx-auto card-arrow'}/>
+                                </Row>
+                            </Col>
+                        </div>
+                        {pokeMenu === 'start' && <PokeOptions activePokemon={activePokemon} setPokeMenu={setPokeMenu}/>}
+                        {pokeMenu === 'battle' &&
+                        <PokeBattleButton moves={activePokemon.moves} setPokeMenu={setPokeMenu}/>}
+                    </>
             }
         </Container>
     </section>
+}
+
+function isNotEmpty(object) { for(const i in object) { return true; } return false; }
+
+function BagScreen(props) {
+    const {bag} = useBagContext()
+    const [target, setTarget] = useState({})
+    const [targetItem, setTargetItem] = useState({})
+    const [targetMove, setTargetMove] = useState({})
+    const [modalShow, setModalShow] = useState(false)
+
+    useEffect(()=>{
+        if (isNotEmpty(target) && isNotEmpty(targetItem)){
+            console.log(target)
+            console.log(targetItem)
+            switch (targetItem.name) {
+                case 'ether':
+            }
+        }
+    })
+
+    return <Container>
+        <PokeItemChooseModal show={modalShow}
+                             onHide={()=>setModalShow(false)}
+                             item={targetItem}
+                             setTarget={setTarget}
+                             setModalShow={setModalShow}
+                             setTargetMove={setTargetMove}
+                            targetMove={targetMove}/>
+        <Row lg={2} className={'g-4'}>
+            {bag.map((item, i) => {
+                return <BagCard item={item} key={i} setModalShow={setModalShow} setTargetItem={setTargetItem}/>
+            })}
+        </Row>
+    </Container>
+}
+
+function BagCard(props) {
+    const {item, setModalShow, setTargetItem} = props
+    const [open, setOpen] = useState(false)
+
+
+    function consumeItem(item) {
+        setTargetItem(item)
+        setModalShow(true)
+    }
+
+    return <>
+        {item.amount < 1 ? null :
+            <Col aria-controls={item.name} aria-expanded={open} onClick={() => setOpen(!open)}>
+                <Card className={'p-3'}>
+                    <Row>
+                        <Col lg={10}><h4 className={'text-capitalize'}>{item.name}</h4></Col>
+                        <Col lg={2}><Badge pill className={'p-2'}>{item.amount}</Badge></Col>
+                    </Row>
+                    <Collapse in={open}>
+                        <div id={item.name}>
+                            <p>{item.description}</p>
+                            <div className={'w-50 mx-auto'}>
+                                <Button className={'text-center w-100 rounded-pill'}
+                                        onClick={() => consumeItem(item)}>use</Button>
+                            </div>
+                        </div>
+                    </Collapse>
+                </Card>
+            </Col>
+        }
+    </>
+}
+
+function PokeItemChooseModal(props) {
+    const {pokemonTeam} = usePokemonTeamContext()
+    const {setModalShow, setTarget, setTargetMove, targetMove, item} = props
+
+    function selectTarget() {
+        if ((item.name === 'ether' && isNotEmpty(targetMove)) || item.name !== 'ether'){
+            setModalShow(false)
+            console.log('move / target selected')
+        }
+
+    }
+
+    return (
+        <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            pokemonTeam={pokemonTeam}
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Choose what pokemon you'd want to apply the item to.
+                </Modal.Title>
+            </Modal.Header>
+            <div className={'mx-3'}>
+                <h4 className={'text-capitalize'}>{props.item.name}</h4>
+                <p>{props.item.description}</p>
+                <Row lg={2} className={'g-4'}>
+                    {pokemonTeam.map((p, i)=>{ return <Col>
+                        <Card>
+                            <Card.Header><span className={'text-capitalize'}>{p.name}</span></Card.Header>
+                            <Row>
+                                <Col lg={4}>
+                                    <img src={p.image} className={'w-100'} alt=""/>
+                                </Col>
+                                <Col className={' me-3'}>
+                                    <div className={'d-flex my-3'}>
+                                        {p.stats.statusEffect.map((effect, i) => {
+                                            return <PokeStatus key={i} status={effect}/>
+                                        })}
+                                    </div>
+                                    <div>
+                                        <div className={'w-100 my-auto d-flex rounded text-light ps-2 bg-green'}>
+                                            <span className={'text-yellow'}>HP</span>
+                                            <div className={'w-100 my-auto mx-2'}>
+                                                <ProgressBar now={p.stats.currentHeath.base_stat} min={0}
+                                                             max={p.stats.health.base_stat} variant={'success'}/>
+                                            </div>
+                                        </div>
+                                        <div className={'text-right me-3'}>
+                                            {`${p.stats.currentHeath.base_stat} / ${p.stats.health.base_stat}`}
+                                        </div>
+                                    </div>
+                                </Col>
+                                {props.item.name === 'ether' ? <Container className={'mx-auto my-3 w-75'}>
+                                    <ListGroup>
+                                        {p.moves.map((move, i)=>{
+                                            return <ListGroupItem key={i} className={'d-flex justify-content-between'} onClick={()=>{setTargetMove(move); setTarget(p)}} active={move.name === targetMove.name}>
+                                                <div className={'font-weight-bold text-capitalize'}>{move.name}</div>
+                                                <div className={'text-muted'}>{`${move.currentPP}/${move.pp}`}</div>
+                                            </ListGroupItem>
+                                        })}
+                                    </ListGroup>
+                                </Container>
+                                : <Button className={'w-50 mx-auto rounded-pill'} onClick={()=>{selectTarget(); setTarget(p)}}>Select Pokemon</Button>
+                                }
+                            </Row>
+                        </Card>
+                    </Col>
+                    })}
+                </Row>
+            </div>
+            <Modal.Footer>
+                {item.name === 'ether' && <Button className={'w-50 mx-auto rounded-pill'} onClick={()=>selectTarget()} variant={"success"}>Select Move</Button>}
+                <Button onClick={props.onHide}>Back</Button>
+            </Modal.Footer>
+        </Modal>
+    );
 }
 
 function PokemonChangeMenu(props) {
     const {pokemonTeam, activePokemon, setActivePokemon, setPokeMenu} = props
     return <Container>
         <Row lg={2} className={'g-4'}>
-            {pokemonTeam.map((pokemon, i)=><PokeChangeFrames key={i}
-                                                             activePokemon={activePokemon.name === pokemon.name}
-                                                             setActivePokemon={setActivePokemon}
-                                                             setPokeMenu={setPokeMenu}
-                                                             pokemon={pokemon}/>)}
+            {pokemonTeam.map((pokemon, i) => <PokeChangeFrames key={i}
+                                                               activePokemon={activePokemon.name === pokemon.name}
+                                                               setActivePokemon={setActivePokemon}
+                                                               setPokeMenu={setPokeMenu}
+                                                               pokemon={pokemon}/>)}
         </Row>
-        <div className={'mt-3'}><button onClick={()=>setPokeMenu('start')} className={'poke-option-button w-100 btn bg-light'}>Back</button></div>
+        <div className={'mt-3'}>
+            <button onClick={() => setPokeMenu('start')} className={'poke-option-button w-100 btn bg-light'}>Back
+            </button>
+        </div>
     </Container>
 }
 
@@ -91,31 +247,39 @@ function PokeChangeFrames(props) {
     const gender = GetGender(pokemon.gender)
     console.log(pokemon)
     const changePokemon = (pokemon) => {
-        if (!pokemon.stats.statusEffect.includes('fainted')){
+        if (!pokemon.stats.statusEffect.includes('fainted')) {
             setActivePokemon(pokemon)
             setPokeMenu('start')
         }
     }
     return <Col>
-        <Card className={activePokemon ? 'border-3 border-primary bg-yellow' : pokemon.stats.statusEffect.includes('fainted') ? 'fainted' : ''} onClick={()=>changePokemon(pokemon)}>
+        <Card
+            className={activePokemon ? 'border-3 border-primary bg-yellow' : pokemon.stats.statusEffect.includes('fainted') ? 'fainted' : ''}
+            onClick={() => changePokemon(pokemon)}>
             <Row className={'mt-2'}>
                 <Col lg={4}>
                     <img src={pokemon.image} alt="" style={{height: '10rem'}}/>
                 </Col>
                 <Col lg={8}>
-                    <div className={'text-capitalize h3'}><span className={'text-capitalize h4'}>{pokemon.name} <span className={'ms-2 text-primary'}><MDBIcon icon={gender}/></span></span></div>
-                    <div>{pokemon.types.map((type, i)=>{return <span key={i} className={'text-capitalize'}>{`${type.type.name} `}</span>})}</div>
+                    <div className={'text-capitalize h3'}><span className={'text-capitalize h4'}>{pokemon.name} <span
+                        className={'ms-2 text-primary'}><MDBIcon icon={gender}/></span></span></div>
+                    <div>{pokemon.types.map((type, i) => {
+                        return <span key={i} className={'text-capitalize'}>{`${type.type.name} `}</span>
+                    })}</div>
                     <Row lg={2} style={{height: '70px'}} className={'me-2'}>
                         <Col className={'d-flex'}>
                             <div className={'align-self-end'}>
-                                {pokemon.stats.statusEffect.map((effect, i)=>{return <PokeStatus key={i} status={effect}/>})}
+                                {pokemon.stats.statusEffect.map((effect, i) => {
+                                    return <PokeStatus key={i} status={effect}/>
+                                })}
                             </div>
                         </Col>
                         <Col>
                             <div className={'w-100 my-auto d-flex rounded text-light ps-2 bg-green'}>
                                 <span className={'text-yellow'}>HP</span>
                                 <div className={'w-100 my-auto mx-2'}>
-                                    <ProgressBar now={pokemon.stats.currentHeath.base_stat} min={0} max={pokemon.stats.health.base_stat} variant={'success'}/>
+                                    <ProgressBar now={pokemon.stats.currentHeath.base_stat} min={0}
+                                                 max={pokemon.stats.health.base_stat} variant={'success'}/>
                                 </div>
                             </div>
                             <div className={'text-right me-3'}>
@@ -130,7 +294,7 @@ function PokeChangeFrames(props) {
 }
 
 const getEffectColour = (effect) => {
-    switch(effect) {
+    switch (effect) {
         case 'fainted':
             return 'danger'
         case 'burn':
@@ -143,13 +307,13 @@ const getEffectColour = (effect) => {
     }
 }
 
-function PokeStatus(props){
+function PokeStatus(props) {
     const {status} = props
     const effect = getEffectColour(status)
     return <Badge className={'p-2'} pill bg={effect}>{status}</Badge>
 }
 
-function PokeOptions (props) {
+function PokeOptions(props) {
     const {activePokemon, setPokeMenu} = props
     const [message, setMessage] = useState(`What will ${activePokemon.name} do?`)
 
@@ -157,7 +321,8 @@ function PokeOptions (props) {
         <div className={'p-2 battle-option-screen m-0 d-flex'}>
             <PokeMessage message={message}/>
             <Col lg={6} className={'m-0 bg-beige row rounded-3'}>
-                <PokeStartButton buttons={['fight', 'pokemon', 'bag', 'flee']} setMessage={setMessage} setPokeMenu={setPokeMenu} pokemon={activePokemon}/>
+                <PokeStartButton buttons={['fight', 'pokemon', 'bag', 'flee']} setMessage={setMessage}
+                                 setPokeMenu={setPokeMenu} pokemon={activePokemon}/>
             </Col>
         </div>
     </RoundedDiv>
@@ -170,7 +335,7 @@ function RoundedDiv(props) {
     </div>
 }
 
-function PokeMessage(props){
+function PokeMessage(props) {
     const {message} = props
     return <Col lg={6} className={'m-0'}>
         <RoundedDiv color={'bg-green'}>
@@ -192,9 +357,12 @@ function PokeBattleButton(props) {
     return <RoundedDiv color={'bg-green'}>
         <Container>
             <Row col={2}>
-                {moves.map((move, i)=><PokeMoveButton key={i} move={move}/>)}
+                {moves.map((move, i) => <PokeMoveButton key={i} move={move}/>)}
             </Row>
-            <div><button onClick={()=>setPokeMenu('start')} className={'poke-option-button w-100 btn bg-light'}>Back</button></div>
+            <div>
+                <button onClick={() => setPokeMenu('start')} className={'poke-option-button w-100 btn bg-light'}>Back
+                </button>
+            </div>
         </Container>
     </RoundedDiv>
 }
@@ -207,10 +375,10 @@ function PokeMoveButton(props) {
                 {move.description[0].flavor_text}
             </Tooltip>
         } placement={'top'} defaultShow={false} delay={500}>
-        <button className={'poke-option-button w-100 btn bg-light'}>
-            <div className={'font-weight-bold'}>{move.name}</div>
-            <div className={'text-muted'}>{`${move.currentPP}/${move.pp}`}</div>
-        </button>
+            <button className={'poke-option-button w-100 btn bg-light'}>
+                <div className={'font-weight-bold'}>{move.name}</div>
+                <div className={'text-muted'}>{`${move.currentPP}/${move.pp}`}</div>
+            </button>
         </OverlayTrigger>
     </Col>
 }
@@ -234,15 +402,22 @@ function PokeStartButton(props) {
                 break
             case 'flee':
                 setMessage('you have fled')
-                setTimeout(function(){history.push('/')}, 1000)
+                setTimeout(function () {
+                    history.push('/')
+                }, 1000)
                 break
             default:
                 setPokeMenu('start')
         }
     }
     return <>
-        {buttons.map((button, i)=>{return <Col lg={6} key={i}><button onClick={()=>click(button)} className={`poke-option-button w-100 btn ${button}`}>{button}</button></Col>})}
-        </>
+        {buttons.map((button, i) => {
+            return <Col lg={6} key={i}>
+                <button onClick={() => click(button)}
+                        className={`poke-option-button w-100 btn ${button}`}>{button}</button>
+            </Col>
+        })}
+    </>
 }
 
 function NameSection(props) {
@@ -250,20 +425,25 @@ function NameSection(props) {
     const gender = GetGender(pokemon.gender)
     return <div>
         <Card className={className + ' px-3 py-1 pokemon-card bg-beige'}>
-            <Card.Title><span className={'text-capitalize h4'}>{pokemon.name} <span className={'ms-2 text-primary'}><MDBIcon icon={gender}/></span></span></Card.Title>
+            <Card.Title><span className={'text-capitalize h4'}>{pokemon.name} <span
+                className={'ms-2 text-primary'}><MDBIcon icon={gender}/></span></span></Card.Title>
             <div className={'d-flex justify-content-between'}>
-                <img src="https://firebasestorage.googleapis.com/v0/b/pokemon-battle-f40d2.appspot.com/o/Poke-Ball-32.png?alt=media&token=9513774d-f6e3-474b-988f-490c7f58ff08"
-                     alt=""/>
+                <img
+                    src="https://firebasestorage.googleapis.com/v0/b/pokemon-battle-f40d2.appspot.com/o/Poke-Ball-32.png?alt=media&token=9513774d-f6e3-474b-988f-490c7f58ff08"
+                    alt=""/>
                 <div className={'w-75 my-auto d-flex rounded text-light ps-2 bg-green'}>
                     <span className={'text-yellow'}>HP</span>
                     <div className={'w-100 my-auto mx-2'}>
-                        <ProgressBar now={pokemon.stats.currentHeath.base_stat} min={0} max={pokemon.stats.health.base_stat} variant={'success'}/>
+                        <ProgressBar now={pokemon.stats.currentHeath.base_stat} min={0}
+                                     max={pokemon.stats.health.base_stat} variant={'success'}/>
                     </div>
                 </div>
             </div>
             <Row lg={2} className={'mt-1'}>
                 <Col lg={6}>
-                    {pokemon.stats.statusEffect.map((effect, i)=>{return <PokeStatus key={i} status={effect}/>})}
+                    {pokemon.stats.statusEffect.map((effect, i) => {
+                        return <PokeStatus key={i} status={effect}/>
+                    })}
                 </Col>
                 <Col lg={6}>
                     {friend && <div className={'text-right'}>

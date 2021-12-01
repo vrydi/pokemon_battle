@@ -9,6 +9,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
 import {BattleSection} from "./components/Battle";
+import {BagProvider} from "./contexts/bagContext";
 
 function DefaultComp(props) {
     return <div className="App">
@@ -19,11 +20,11 @@ function DefaultComp(props) {
 
 function ProvidedApp() {
     return <Switch>
-            <Route path={'/battle'}>
-                <DefaultComp>
-                    <BattleSection/>
-                </DefaultComp>
-            </Route>
+        <Route path={'/battle'}>
+            <DefaultComp>
+                <BattleSection/>
+            </DefaultComp>
+        </Route>
         <Route path={'/'}>
             <DefaultComp>
                 <PokemonSection/>
@@ -37,7 +38,9 @@ function App() {
     <Router>
         <PokemonTeamProvider>
             <EnemyPokemonTeamProvider>
-                <ProvidedApp/>
+                <BagProvider>
+                    <ProvidedApp/>
+                </BagProvider>
             </EnemyPokemonTeamProvider>
         </PokemonTeamProvider>
     </Router>
