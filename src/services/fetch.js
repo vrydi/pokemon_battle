@@ -9,7 +9,7 @@ async function getFourMoves(moves) {
     for (let i = 0; i < 4; i++) {
         const move = moves[Math.round(Math.random() * (moves.length - 1))].move
         const moveStat = await getMoveInfo(move.url)
-        result.push({...moveStat, name: move.name})
+        result.push({...moveStat, name: move.name, currentPP: moveStat.pp})
     }
     return result
 }

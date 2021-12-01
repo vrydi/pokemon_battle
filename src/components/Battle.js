@@ -50,6 +50,7 @@ export function BattleSection(){
                 </Col>
             </div>
             {pokeMenu === 'start' && <PokeOptions activePokemon={activePokemon} setPokeMenu={setPokeMenu}/>}
+            {pokeMenu === 'battle' && <PokeBattleButton moves={activePokemon.moves} setPokeMenu={setPokeMenu}/>}
         </Container>
     </section>
 }
@@ -89,6 +90,27 @@ function PokeMessage(props){
     </Col>
 }
 
+function PokeBattleButton(props) {
+    const {setPokeMenu, moves} = props
+    console.log(moves)
+
+    return <RoundedDiv color={'bg-green'}>
+        <Row col={2}>
+            {moves.map((move, i)=><PokeMoveButton key={i} move={move}/>)}
+        </Row>
+    </RoundedDiv>
+}
+
+function PokeMoveButton(props) {
+    const {move} = props
+    return <Col>
+        <button className={'poke-option-button w-100 btn bg-light'}>
+            <div className={'font-weight-bold'}>{move.name}</div>
+            <div className={'text-muted'}>{`${move.currentPP}/${move.pp}`}</div>
+        </button>
+    </Col>
+}
+
 function PokeStartButton(props) {
     const {buttons, setMessage, setPokeMenu} = props
     const history = useHistory()
@@ -96,6 +118,7 @@ function PokeStartButton(props) {
     const click = (button) => {
         switch (button) {
             case 'fight' :
+                setPokeMenu('battle')
                 break
             case 'pokemon':
                 break
