@@ -83,3 +83,7 @@
 .flee {
     background-color: #2891C9 !important;
 }
+
+.fainted {
+    filter: brightness(0.5);
+}

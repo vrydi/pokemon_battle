@@ -60,7 +60,7 @@ export function BattleSection(){
                             </Row>
                             <Row>
                                 <NameSection pokemon={activePokemon} className={'ms-auto'} friend={true}/>
-                                <div className={'position-relative w-75 mx-auto card-arrow mirror'}/>
+                                <div className={'position-relative w-75 mx-auto card-arrow'}/>
                             </Row>
                         </Col>
                     </div>
@@ -91,11 +91,13 @@ function PokeChangeFrames(props) {
     const gender = GetGender(pokemon.gender)
     console.log(pokemon)
     const changePokemon = (pokemon) => {
-        setActivePokemon(pokemon)
-        setPokeMenu('start')
+        if (!pokemon.stats.statusEffect.includes('fainted')){
+            setActivePokemon(pokemon)
+            setPokeMenu('start')
+        }
     }
     return <Col>
-        <Card className={activePokemon ? 'border-3 border-primary bg-yellow' : ''} onClick={()=>changePokemon(pokemon)}>
+        <Card className={activePokemon ? 'border-3 border-primary bg-yellow' : pokemon.stats.statusEffect.includes('fainted') ? 'fainted' : ''} onClick={()=>changePokemon(pokemon)}>
             <Row className={'mt-2'}>
                 <Col lg={4}>
                     <img src={pokemon.image} alt="" style={{height: '10rem'}}/>
@@ -155,7 +157,7 @@ function PokeOptions (props) {
         <div className={'p-2 battle-option-screen m-0 d-flex'}>
             <PokeMessage message={message}/>
             <Col lg={6} className={'m-0 bg-beige row rounded-3'}>
-                <PokeStartButton buttons={['fight', 'pokemon', 'bag', 'flee']} setMessage={setMessage} setPokeMenu={setPokeMenu}/>
+                <PokeStartButton buttons={['fight', 'pokemon', 'bag', 'flee']} setMessage={setMessage} setPokeMenu={setPokeMenu} pokemon={activePokemon}/>
             </Col>
         </div>
     </RoundedDiv>
@@ -214,13 +216,15 @@ function PokeMoveButton(props) {
 }
 
 function PokeStartButton(props) {
-    const {buttons, setMessage, setPokeMenu} = props
+    const {buttons, setMessage, setPokeMenu, pokemon} = props
     const history = useHistory()
 
     const click = (button) => {
         switch (button) {
             case 'fight' :
-                setPokeMenu('battle')
+                if (!pokemon.stats.statusEffect.includes('fainted')) {
+                    setPokeMenu('battle')
+                }
                 break
             case 'pokemon':
                 setPokeMenu('pokemon')
