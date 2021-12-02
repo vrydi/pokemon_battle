@@ -91,6 +91,7 @@ function BagScreen(props) {
         if (isNotEmpty(target) && isNotEmpty(targetItem)){
             console.log(target)
             console.log(targetItem)
+            // eslint-disable-next-line default-case
             switch (targetItem.name) {
                 case 'ether':
                     pokemonTeam.find(pokemon=>pokemon.id===target.id).moves.find(move=>move.name===targetMove.name).currentPP = targetMove.currentPP + 10 > targetMove.pp ? targetMove.currentPP = targetMove.pp : targetMove.currentPP += targetMove.pp
@@ -101,7 +102,7 @@ function BagScreen(props) {
                     updateTeam(pokemonTeam)
                     break
                 case 'fresh water':
-                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHeath = target.stats.currentHeath + 30 > target.stats.health ? target.stats.currentHeath = target.stats.health : target.stats.currentHeath += 30
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHealth = target.stats.currentHealth + 30 > target.stats.health ? target.stats.currentHealth = target.stats.health : target.stats.currentHealth += 30
                     bag.find(item=>item.name==='fresh water').amount--
                     setTarget({})
                     setTargetItem({})
@@ -118,7 +119,7 @@ function BagScreen(props) {
                     break
                 case 'full restore':
                     pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.statusEffect = target.stats.statusEffect.includes('fainted') ? ['fainted'] : []
-                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHeath = target.stats.health
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHealth = target.stats.health
                     bag.find(item=>item.name==='full restore').amount--
                     setTarget({})
                     setTargetItem({})
@@ -127,7 +128,7 @@ function BagScreen(props) {
                     break
                 case 'revive':
                     pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.statusEffect.filter(status=>status!=='fainted')
-                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHeath = Math.round(target.stats.health / 2)
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHealth = Math.round(target.stats.health / 2)
                     bag.find(item=>item.name==='revive').amount--
                     setTarget({})
                     setTargetItem({})
@@ -237,12 +238,12 @@ function PokeItemChooseModal(props) {
                                         <div className={'w-100 my-auto d-flex rounded text-light ps-2 bg-green'}>
                                             <span className={'text-yellow'}>HP</span>
                                             <div className={'w-100 my-auto mx-2'}>
-                                                <ProgressBar now={p.stats.currentHeath.base_stat} min={0}
+                                                <ProgressBar now={p.stats.currentHealth.base_stat} min={0}
                                                              max={p.stats.health.base_stat} variant={'success'}/>
                                             </div>
                                         </div>
                                         <div className={'text-right me-3'}>
-                                            {`${p.stats.currentHeath.base_stat} / ${p.stats.health.base_stat}`}
+                                            {`${p.stats.currentHealth.base_stat} / ${p.stats.health.base_stat}`}
                                         </div>
                                     </div>
                                 </Col>
@@ -326,12 +327,12 @@ function PokeChangeFrames(props) {
                             <div className={'w-100 my-auto d-flex rounded text-light ps-2 bg-green'}>
                                 <span className={'text-yellow'}>HP</span>
                                 <div className={'w-100 my-auto mx-2'}>
-                                    <ProgressBar now={pokemon.stats.currentHeath.base_stat} min={0}
+                                    <ProgressBar now={pokemon.stats.currentHealth.base_stat} min={0}
                                                  max={pokemon.stats.health.base_stat} variant={'success'}/>
                                 </div>
                             </div>
                             <div className={'text-right me-3'}>
-                                {`${pokemon.stats.currentHeath.base_stat} / ${pokemon.stats.health.base_stat}`}
+                                {`${pokemon.stats.currentHealth.base_stat} / ${pokemon.stats.health.base_stat}`}
                             </div>
                         </Col>
                     </Row>
@@ -419,6 +420,7 @@ function PokeBattleButton(props) {
 
 function PokeMoveButton(props) {
     const {move} = props
+    console.log(move)
     return <Col>
         <OverlayTrigger overlay={
             <Tooltip>
@@ -484,7 +486,7 @@ function NameSection(props) {
                 <div className={'w-75 my-auto d-flex rounded text-light ps-2 bg-green'}>
                     <span className={'text-yellow'}>HP</span>
                     <div className={'w-100 my-auto mx-2'}>
-                        <ProgressBar now={pokemon.stats.currentHeath.base_stat} min={0}
+                        <ProgressBar now={pokemon.stats.currentHealth.base_stat} min={0}
                                      max={pokemon.stats.health.base_stat} variant={'success'}/>
                     </div>
                 </div>
@@ -497,7 +499,7 @@ function NameSection(props) {
                 </Col>
                 <Col lg={6}>
                     {friend && <div className={'text-right'}>
-                        {`${pokemon.stats.currentHeath.base_stat} / ${pokemon.stats.health.base_stat}`}
+                        {`${pokemon.stats.currentHealth.base_stat} / ${pokemon.stats.health.base_stat}`}
                     </div>}
                 </Col>
             </Row>

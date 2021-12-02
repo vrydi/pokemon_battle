@@ -13,6 +13,7 @@ export function PokemonTeamProvider (props) {
         localStorage.setItem('pokemonTeam', JSON.stringify(team))
         setTries(tries-1)
         localStorage.setItem('tries', tries)
+        localStorage.setItem('activePokemon', JSON.stringify(team[0]))
         setPokemonTeam(team)
     }, [setPokemonTeam, tries, setTries])
 

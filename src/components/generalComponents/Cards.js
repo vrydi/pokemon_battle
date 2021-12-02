@@ -22,29 +22,31 @@ export function PokemonCard (props) {
                         <h5>Moves : </h5>
                         <ListGroup className={'list-group-flush'}>
                             {pokemon.moves.map((m, i)=>{
-                                return <>{m.description.length > 0 && <OverlayTrigger key={i} overlay={
+                                console.log('pokemon', pokemon)
+                                console.log('moves :', m)
+                                return <>{m.description && <OverlayTrigger key={i} overlay={
                                         <Tooltip>
-                                            {m.description[0].flavor_text}
+                                            {m.description.flavor_text}
                                         </Tooltip>
                                     } placement={'top'} defaultShow={false} delay={500}>
                                         <ListGroupItem className={'text-capitalize'}>{m.name}</ListGroupItem>
                                     </OverlayTrigger>}</>
                             })}
                         </ListGroup>
-                        <Card.Text>
-                            {pokemon.ability && <OverlayTrigger overlay={
-                                <Tooltip>
-                                    {pokemon.ability.description[0].flavor_text}
-                                </Tooltip>
-                            } placement={'top'} defaultShow={false} delay={500}>
-                                <span><span className={'h5'}>Ability</span> : {pokemon.ability.name}</span>
-                            </OverlayTrigger>
-                                }
-                        </Card.Text>
+                        {/*<Card.Text>*/}
+                        {/*    {pokemon.ability && <OverlayTrigger overlay={*/}
+                        {/*        <Tooltip>*/}
+                        {/*            {pokemon.ability.description[0].flavor_text}*/}
+                        {/*        </Tooltip>*/}
+                        {/*    } placement={'top'} defaultShow={false} delay={500}>*/}
+                        {/*        <span><span className={'h5'}>Ability</span> : {pokemon.ability.name}</span>*/}
+                        {/*    </OverlayTrigger>*/}
+                        {/*        }*/}
+                        {/*</Card.Text>*/}
                         <h5>Stats :</h5>
                         <ListGroup className={'list-group-flush'}>
                             {Object.entries(pokemon.stats).map((s, i)=>{
-                                return <ListItemStat name={s[0]} value={s[1]} key={i}/>
+                                return s[0] !== 'statusEffect' && <ListItemStat name={s[0]} value={s[1]} key={i}/>
                             })}
                         </ListGroup>
                     </div>
