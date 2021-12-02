@@ -16,11 +16,17 @@ export function PokemonTeamProvider (props) {
         setPokemonTeam(team)
     }, [setPokemonTeam, tries, setTries])
 
+    const updateTeam = useCallback((newTeam)=>{
+        setPokemonTeam(newTeam)
+        localStorage.setItem('pokemonTeam', JSON.stringify(newTeam))
+    }, [setPokemonTeam])
+
     const api = useMemo(()=>({
         pokemonTeam,
         generateTeam,
-        tries
-    }),[pokemonTeam, generateTeam, tries])
+        tries,
+        updateTeam
+    }),[pokemonTeam, generateTeam, tries, updateTeam])
 
     return <PokemonTeamContext.Provider value={api}>
         {props.children}

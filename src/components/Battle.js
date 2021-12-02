@@ -19,7 +19,7 @@ import {useBagContext} from "../contexts/bagContext";
 export function BattleSection() {
     const {pokemonTeam} = usePokemonTeamContext()
     const {enemyPokemonTeam} = useEnemyPokemonTeamContext()
-    const [activePokemon, setActivePokemon] = useState(pokemonTeam[0])
+    const [activePokemon, setActivePokemon] = useState(JSON.parse(localStorage.getItem('activePokemon')) || pokemonTeam[0])
     const [activeEnemyPokemon, setActiveEnemyPokemon] = useState(enemyPokemonTeam[0])
     const [pokeMenu, setPokeMenu] = useState('start')
 
@@ -29,7 +29,7 @@ export function BattleSection() {
                                                          activePokemon={activePokemon}
                                                          setActivePokemon={setActivePokemon}
                                                          setPokeMenu={setPokeMenu}/> :
-                pokeMenu === 'bag' ? <BagScreen/> :
+                pokeMenu === 'bag' ? <BagScreen setPokeMenu={setPokeMenu}/> :
                     <>
                         <div className={'d-flex battle-screen'}>
                             <Col lg={6} className={'left-field'}>
@@ -50,7 +50,7 @@ export function BattleSection() {
                             </Col>
                             <Col lg={6} className={'right-field'}>
                                 <Row>
-                                    <img className={'w-75 mt-5 ms-auto mirror poke-image'}
+                                    <img className={'w-75 mt-5 ms-auto poke-image'}
                                          src={activeEnemyPokemon.image}
                                          alt=""/>
                                 </Row>
@@ -58,12 +58,12 @@ export function BattleSection() {
                                     <img
                                         src="https://firebasestorage.googleapis.com/v0/b/pokemon-battle-f40d2.appspot.com/o/battle_podia.png?alt=media&token=21348cd1-ea50-4ea2-ab4c-c9d4ba6d6042"
                                         alt=""
-                                        className={'w-75 position-relative ms-auto poke-stadia mirror'}
+                                        className={'w-75 position-relative ms-auto poke-stadia'}
                                     />
                                 </Row>
                                 <Row>
                                     <NameSection pokemon={activePokemon} className={'ms-auto'} friend={true}/>
-                                    <div className={'position-relative w-75 mx-auto card-arrow'}/>
+                                    <div className={'position-relative w-75 mx-auto card-arrow mirror'}/>
                                 </Row>
                             </Col>
                         </div>
@@ -84,6 +84,8 @@ function BagScreen(props) {
     const [targetItem, setTargetItem] = useState({})
     const [targetMove, setTargetMove] = useState({})
     const [modalShow, setModalShow] = useState(false)
+    const {pokemonTeam, updateTeam} = usePokemonTeamContext()
+    const {setPokeMenu} = props
 
     useEffect(()=>{
         if (isNotEmpty(target) && isNotEmpty(targetItem)){
@@ -91,9 +93,50 @@ function BagScreen(props) {
             console.log(targetItem)
             switch (targetItem.name) {
                 case 'ether':
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).moves.find(move=>move.name===targetMove.name).currentPP = targetMove.currentPP + 10 > targetMove.pp ? targetMove.currentPP = targetMove.pp : targetMove.currentPP += targetMove.pp
+                    bag.find(item=>item.name==='ether').amount--
+                    setTarget({})
+                    setTargetItem({})
+                    setTargetMove({})
+                    updateTeam(pokemonTeam)
+                    break
+                case 'fresh water':
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHeath = target.stats.currentHeath + 30 > target.stats.health ? target.stats.currentHeath = target.stats.health : target.stats.currentHeath += 30
+                    bag.find(item=>item.name==='fresh water').amount--
+                    setTarget({})
+                    setTargetItem({})
+                    setTargetMove({})
+                    updateTeam(pokemonTeam)
+                    break
+                case 'full heal':
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.statusEffect = target.stats.statusEffect.includes('fainted') ? ['fainted'] : []
+                    bag.find(item=>item.name==='full heal').amount--
+                    setTarget({})
+                    setTargetItem({})
+                    setTargetMove({})
+                    updateTeam(pokemonTeam)
+                    break
+                case 'full restore':
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.statusEffect = target.stats.statusEffect.includes('fainted') ? ['fainted'] : []
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHeath = target.stats.health
+                    bag.find(item=>item.name==='full restore').amount--
+                    setTarget({})
+                    setTargetItem({})
+                    setTargetMove({})
+                    updateTeam(pokemonTeam)
+                    break
+                case 'revive':
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.statusEffect.filter(status=>status!=='fainted')
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHeath = Math.round(target.stats.health / 2)
+                    bag.find(item=>item.name==='revive').amount--
+                    setTarget({})
+                    setTargetItem({})
+                    setTargetMove({})
+                    updateTeam(pokemonTeam)
+                    break
             }
         }
-    })
+    }, [bag, pokemonTeam, target, targetItem, targetMove, updateTeam])
 
     return <Container>
         <PokeItemChooseModal show={modalShow}
@@ -102,12 +145,13 @@ function BagScreen(props) {
                              setTarget={setTarget}
                              setModalShow={setModalShow}
                              setTargetMove={setTargetMove}
-                            targetMove={targetMove}/>
+                             targetMove={targetMove}/>
         <Row lg={2} className={'g-4'}>
             {bag.map((item, i) => {
                 return <BagCard item={item} key={i} setModalShow={setModalShow} setTargetItem={setTargetItem}/>
             })}
         </Row>
+        <button onClick={() => setPokeMenu('start')} className={'poke-option-button w-100 btn bg-light'}>Back</button>
     </Container>
 }
 
@@ -163,6 +207,9 @@ function PokeItemChooseModal(props) {
             aria-labelledby="contained-modal-title-vcenter"
             centered
             pokemonTeam={pokemonTeam}
+            setTarget={setTarget}
+            setModalShow={setModalShow}
+            setTargetMove={setTargetMove}
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
@@ -174,7 +221,7 @@ function PokeItemChooseModal(props) {
                 <p>{props.item.description}</p>
                 <Row lg={2} className={'g-4'}>
                     {pokemonTeam.map((p, i)=>{ return <Col>
-                        <Card>
+                        <Card key={i}>
                             <Card.Header><span className={'text-capitalize'}>{p.name}</span></Card.Header>
                             <Row>
                                 <Col lg={4}>
@@ -248,6 +295,7 @@ function PokeChangeFrames(props) {
     console.log(pokemon)
     const changePokemon = (pokemon) => {
         if (!pokemon.stats.statusEffect.includes('fainted')) {
+            localStorage.setItem('activePokemon', JSON.stringify(pokemon))
             setActivePokemon(pokemon)
             setPokeMenu('start')
         }
@@ -302,8 +350,10 @@ const getEffectColour = (effect) => {
         case 'confusion':
         case 'paralysed':
             return 'secondary'
-        default:
+        case 'poison' :
             return 'primary'
+        default:
+            return 'info'
     }
 }
 
