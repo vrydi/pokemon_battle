@@ -15,19 +15,16 @@ import {MDBIcon} from "mdbreact";
 import {useEnemyPokemonTeamContext} from "../contexts/EnemyPokemonTeam";
 import {useHistory} from "react-router-dom";
 import {useBagContext} from "../contexts/bagContext";
+import {useBattleContext} from "../contexts/BattleContext";
 
 export function BattleSection() {
-    const {pokemonTeam} = usePokemonTeamContext()
-    const {enemyPokemonTeam} = useEnemyPokemonTeamContext()
-    const [activePokemon, setActivePokemon] = useState(JSON.parse(localStorage.getItem('activePokemon')) || pokemonTeam[0])
-    const [activeEnemyPokemon, setActiveEnemyPokemon] = useState(enemyPokemonTeam[0])
+    const {pokemonTeam, activePokemon} = usePokemonTeamContext()
+    const {activeEnemyPokemon} = useEnemyPokemonTeamContext()
     const [pokeMenu, setPokeMenu] = useState('start')
 
     return <section>
         <Container id={'battle'} className={'p-0 mt-5'}>
             {pokeMenu === 'pokemon' ? <PokemonChangeMenu pokemonTeam={pokemonTeam}
-                                                         activePokemon={activePokemon}
-                                                         setActivePokemon={setActivePokemon}
                                                          setPokeMenu={setPokeMenu}/> :
                 pokeMenu === 'bag' ? <BagScreen setPokeMenu={setPokeMenu}/> :
                     <>
@@ -76,7 +73,7 @@ export function BattleSection() {
     </section>
 }
 
-function isNotEmpty(object) { for(const i in object) { return true; } return false; }
+export function isNotEmpty(object) { for(const i in object) { return true; } return false; }
 
 function BagScreen(props) {
     const {bag} = useBagContext()
@@ -274,12 +271,12 @@ function PokeItemChooseModal(props) {
 }
 
 function PokemonChangeMenu(props) {
-    const {pokemonTeam, activePokemon, setActivePokemon, setPokeMenu} = props
+    const {pokemonTeam, setPokeMenu} = props
+    const {activePokemon} = usePokemonTeamContext()
     return <Container>
         <Row lg={2} className={'g-4'}>
             {pokemonTeam.map((pokemon, i) => <PokeChangeFrames key={i}
                                                                activePokemon={activePokemon.name === pokemon.name}
-                                                               setActivePokemon={setActivePokemon}
                                                                setPokeMenu={setPokeMenu}
                                                                pokemon={pokemon}/>)}
         </Row>
@@ -291,7 +288,8 @@ function PokemonChangeMenu(props) {
 }
 
 function PokeChangeFrames(props) {
-    const {activePokemon, pokemon, setActivePokemon, setPokeMenu} = props
+    const {setActivePokemon} = usePokemonTeamContext()
+    const {pokemon, activePokemon, setPokeMenu} = props
     const gender = GetGender(pokemon.gender)
     console.log(pokemon)
     const changePokemon = (pokemon) => {
@@ -420,14 +418,20 @@ function PokeBattleButton(props) {
 
 function PokeMoveButton(props) {
     const {move} = props
+    const {battle} = useBattleContext()
     console.log(move)
+
+    const battleTime = () => {
+        battle(move)
+    }
+
     return <Col>
         <OverlayTrigger overlay={
             <Tooltip>
-                {move.description[0].flavor_text}
+                {move.description ? move.description.flavor_text : move.flavor_text}
             </Tooltip>
         } placement={'top'} defaultShow={false} delay={500}>
-            <button className={'poke-option-button w-100 btn bg-light'}>
+            <button className={'poke-option-button w-100 btn bg-light'} onClick={()=>battleTime()}>
                 <div className={'font-weight-bold'}>{move.name}</div>
                 <div className={'text-muted'}>{`${move.currentPP}/${move.pp}`}</div>
             </button>

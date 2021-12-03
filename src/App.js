@@ -10,6 +10,7 @@ import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
 import {BattleSection} from "./components/Battle";
 import {BagProvider} from "./contexts/bagContext";
+import {BattleProvider} from "./contexts/BattleContext";
 
 function DefaultComp(props) {
     return <div className="App">
@@ -39,7 +40,9 @@ function App() {
         <PokemonTeamProvider>
             <EnemyPokemonTeamProvider>
                 <BagProvider>
-                    <ProvidedApp/>
+                    <BattleProvider>
+                        <ProvidedApp/>
+                    </BattleProvider>
                 </BagProvider>
             </EnemyPokemonTeamProvider>
         </PokemonTeamProvider>

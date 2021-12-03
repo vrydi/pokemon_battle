@@ -54,7 +54,7 @@ async function getFourMoves(moves, types) {
         },
         {
             type: 'water',
-            move: 'surging-strikes'
+            move: 'water-pulse'
         },
         {
             type: 'ice',

@@ -6,6 +6,7 @@ const PokemonTeamContext = createContext()
 export function PokemonTeamProvider (props) {
     const [pokemonTeam, setPokemonTeam] = useState(JSON.parse(localStorage.getItem('pokemonTeam')) || [])
     const [tries, setTries] = useState(localStorage.getItem('tries') || 3)
+    const [activePokemon, setActivePokemon] = useState(JSON.parse(localStorage.getItem('activePokemon')) || pokemonTeam[0] || {})
 
     const generateTeam = useCallback(async ()=>{
         const team = await generatePokemonTeam()
@@ -15,7 +16,8 @@ export function PokemonTeamProvider (props) {
         localStorage.setItem('tries', tries)
         localStorage.setItem('activePokemon', JSON.stringify(team[0]))
         setPokemonTeam(team)
-    }, [setPokemonTeam, tries, setTries])
+        setActivePokemon(team[0])
+    }, [setPokemonTeam, tries, setTries, setActivePokemon])
 
     const updateTeam = useCallback((newTeam)=>{
         setPokemonTeam(newTeam)
@@ -26,8 +28,16 @@ export function PokemonTeamProvider (props) {
         pokemonTeam,
         generateTeam,
         tries,
-        updateTeam
-    }),[pokemonTeam, generateTeam, tries, updateTeam])
+        updateTeam,
+        activePokemon,
+        setActivePokemon
+    }),[pokemonTeam,
+        generateTeam,
+        tries,
+        updateTeam,
+        activePokemon,
+        setActivePokemon
+    ])
 
     return <PokemonTeamContext.Provider value={api}>
         {props.children}
