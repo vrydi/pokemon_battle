@@ -123,7 +123,7 @@ function BagScreen() {
                     updateTeam(pokemonTeam)
                     break
                 case 'revive':
-                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.statusEffect.filter(status=>status!=='fainted')
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.statusEffect = pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.statusEffect.filter(status=>status!=='fainted')
                     pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHealth.base_stat = Math.round(target.stats.health.base_stat / 2)
                     bag.find(item=>item.name==='revive').amount--
                     setTarget({})

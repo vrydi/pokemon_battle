@@ -7,7 +7,7 @@ import {fetchDataTypeEffectiveness} from "../services/fetchTypes";
 const BattleContext = createContext()
 
 export function BattleProvider(props) {
-    const {pokemonTeam, updateTeam, activePokemon, setActivePokemon} = usePokemonTeamContext()
+    const {pokemonTeam, updateTeam, activePokemon} = usePokemonTeamContext()
     const {enemyPokemonTeam, updateEnemyTeam, activeEnemyPokemon, setActiveEnemyPokemon} = useEnemyPokemonTeamContext()
 
     const [fighting, setFighting] = useState(false)
@@ -279,6 +279,9 @@ export function BattleProvider(props) {
                 if (status === 'burned' || status === 'poisoned') {
                     pokemon.stats.currentHealth.base_stat -= Math.floor(pokemon.stats.health.base_stat / 16)
                     setMessage(`${pokemon.name} is ${status}`)
+                    if (Math.random() * 100 <= 25) {
+                        pokemon.stats.statusEffect = pokemon.stats.statusEffect.filter(effect=>status!==effect)
+                    }
                     checkFainted(pokemon)
                 }
             })
@@ -303,9 +306,7 @@ export function BattleProvider(props) {
         console.log('enemy pokemon at the end of battle:', enemyPokemon)
         if (enemyPokemon.stats.statusEffect.includes('fainted')){
             console.log('fainted stuff')
-            const notFainted = tempEnemyTeam.map(pokemon=>{
-                if (!pokemon.stats.statusEffect.includes('fainted')) return pokemon
-            })
+            const notFainted = tempEnemyTeam.filter(pokemon=>!pokemon.stats.statusEffect.includes('fainted'))
             if (notFainted.length > 0) {
                 console.log('switching enemy', notFainted)
                 const newEnemy = notFainted[Math.round(Math.random() * (notFainted.length-1))]
