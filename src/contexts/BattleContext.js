@@ -122,7 +122,7 @@ export function BattleProvider(props) {
                         }
                     } else {
                         target.stats.currentHealth.base_stat -= damage
-                        target.stats.currentHealth.base_stat -= attackDamage(move, executor, target)
+                        target.stats.currentHealth.base_stat -= await attackDamage(move, executor, target)
                         setMessage(`${executor.name} used ${move.name}`)
                         if (Math.random() * 100 > move.effect['effect chance']) {
                             if (!target.stats.statusEffect.includes('poisoned')) {
@@ -189,7 +189,7 @@ export function BattleProvider(props) {
                         }
                     } else {
                         target.stats.currentHealth.base_stat -= damage
-                        target.stats.speed -= 10
+                        target.stats.speed.base_stat -= 10
                         setMessage(`${executor.name} used ${move.name} and lowered ${target.name}s speed`)
                     }
                     break
@@ -286,29 +286,37 @@ export function BattleProvider(props) {
     },[])
 
     const endBattle = useCallback((friendPokemon, enemyPokemon) => {
-        const indexFriend = pokemonTeam.findIndex(pokemon=>pokemon.name===friendPokemon.name)
+        const indexFriend = pokemonTeam.findIndex(pokemon=>{
+            console.log('pokemon in end :', pokemon, friendPokemon)
+            return pokemon.id===friendPokemon.id})
         const tempFriendTeam = pokemonTeam
         tempFriendTeam[indexFriend] = friendPokemon
         updateTeam(tempFriendTeam)
 
         const tempEnemyTeam = enemyPokemonTeam
-        const indexEnemy = tempEnemyTeam.findIndex(pokemon=>pokemon.name===enemyPokemon.name)
+        const indexEnemy = tempEnemyTeam.findIndex(pokemon=>pokemon.id===enemyPokemon.id)
         tempEnemyTeam[indexEnemy] = enemyPokemon
         updateEnemyTeam(tempEnemyTeam)
         setMessage(`What will ${friendPokemon.name} do?`)
 
         setFighting(false)
+        console.log('enemy pokemon at the end of battle:', enemyPokemon)
         if (enemyPokemon.stats.statusEffect.includes('fainted')){
-            const notFainted = tempEnemyTeam.map(pokemon=>!pokemon.stats.statusEffect.includes('fainted'))
+            console.log('fainted stuff')
+            const notFainted = tempEnemyTeam.map(pokemon=>{
+                if (!pokemon.stats.statusEffect.includes('fainted')) return pokemon
+            })
             if (notFainted.length > 0) {
+                console.log('switching enemy', notFainted)
                 const newEnemy = notFainted[Math.round(Math.random() * (notFainted.length-1))]
+                console.log('new enemy', newEnemy)
                 setActiveEnemyPokemon(newEnemy)
             } else {
                 setMessage('enemy team has been defeated')
                 setFighting(true)
             }
         }
-    }, [enemyPokemonTeam, pokemonTeam, updateEnemyTeam, updateTeam])
+    }, [enemyPokemonTeam, pokemonTeam, setActiveEnemyPokemon, updateEnemyTeam, updateTeam])
 
     const battle = useCallback( (friendMove) => {
         setMessage('calculating results')
@@ -330,8 +338,9 @@ export function BattleProvider(props) {
                         checkFainted(enemyPokemon)
                         moveExecution(enemyPokemon, friendPokemon, enemyMove)
                             .then(()=>{
-                                checkFainted(friendPokemon)
-                                checkFainted(enemyPokemon)
+                                checkStatusEffect(friendPokemon)
+                                checkStatusEffect(enemyPokemon)
+                                setTimeout(function () {endBattle(friendPokemon, enemyPokemon)}, 500)
                             })
                     }, 1000)
                 })
@@ -343,19 +352,13 @@ export function BattleProvider(props) {
                     setTimeout(function () {
                         moveExecution(friendPokemon, enemyPokemon, friendMove)
                             .then(()=>{
-                                checkFainted(friendPokemon)
-                                checkFainted(enemyPokemon)
+                                checkStatusEffect(friendPokemon)
+                                checkStatusEffect(enemyPokemon)
+                                setTimeout(function () {endBattle(friendPokemon, enemyPokemon)}, 500)
                             })
                     }, 1000)
                 })
         }
-
-        checkStatusEffect(friendPokemon)
-        checkStatusEffect(enemyPokemon)
-        console.log('friend pokemon :', friendPokemon)
-        console.log('enemy pokemon :', enemyPokemon);
-        endBattle(friendPokemon, enemyPokemon)
-
     }, [activeEnemyPokemon, activePokemon, checkStatusEffect, endBattle, firstAttack, moveExecution])
 
     function capitalize(word) {
