@@ -462,7 +462,7 @@ function PokeStartButton(props) {
             case 'flee':
                 setMessage('you have fled')
                 setTimeout(function () {
-                    history.push('/')
+                    history.push('/pokemon_battle/')
                     setMessage(`What will ${activePokemon.name} do?`)
                 }, 1000)
                 break

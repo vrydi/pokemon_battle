@@ -21,12 +21,12 @@ function DefaultComp(props) {
 
 function ProvidedApp() {
     return <Switch>
-        <Route path={'/battle'}>
+        <Route path={'/pokemon_battle/battle'}>
             <DefaultComp>
                 <BattleSection/>
             </DefaultComp>
         </Route>
-        <Route path={'/'}>
+        <Route path={'/pokemon_battle/'}>
             <DefaultComp>
                 <PokemonSection/>
             </DefaultComp>

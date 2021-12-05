@@ -15,8 +15,8 @@ export function Navigation() {
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <Link to={'/'} className={'nav-link'}>Home</Link>
-                        <Link to={'/battle'} className={'nav-link'}>Battle</Link>
+                        <Link to={'/pokemon_battle/'} className={'nav-link'}>Home</Link>
+                        <Link to={'/pokemon_battle/battle'} className={'nav-link'}>Battle</Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
