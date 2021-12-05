@@ -148,7 +148,7 @@ export async function fetchOnePokemon(id) {
             'special attack': data.stats[3],
             'special defense': data.stats[4],
             speed: data.stats[5],
-            statusEffect: ['test']
+            statusEffect: []
         },
         types: data.types,
         species: data.species.url,

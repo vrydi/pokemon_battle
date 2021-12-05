@@ -43,7 +43,8 @@ export function BattleProvider(props) {
         if (executor.stats.statusEffect.includes('asleep')) {
             setMessage(`${executor.name} is asleep`)
             if (Math.random() * 100 <= 25) {
-                executor.stats.forEach(status=>executor.stats.statusEffect = executor.stats.statusEffect.filter(effect=>status!==effect))
+                executor.stats.statusEffect.forEach(status=>executor.stats.statusEffect = executor.stats.statusEffect.filter(effect=>status!==effect))
+                setMessage(`${executor.name} woke up`)
             }
             return null
         }

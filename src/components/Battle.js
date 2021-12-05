@@ -431,7 +431,7 @@ function PokeMoveButton(props) {
                 {move.description ? move.description.flavor_text : move.flavor_text}
             </Tooltip>
         } placement={'top'} defaultShow={false} delay={500}>
-            <button className={'poke-option-button w-100 btn bg-light'} onClick={()=>battleTime()}>
+            <button className={'poke-option-button w-100 btn bg-light'} onClick={()=>battleTime()} disabled={move.currentPP < 1}>
                 <div className={'font-weight-bold'}>{move.name}</div>
                 <div className={'text-muted'}>{`${move.currentPP}/${move.pp}`}</div>
             </button>

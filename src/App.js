@@ -31,23 +31,23 @@ function ProvidedApp() {
                 <PokemonSection/>
             </DefaultComp>
         </Route>
-        </Switch>
+    </Switch>
 }
 
 function App() {
-  return (
-    <Router>
-        <PokemonTeamProvider>
+    return (
+        <Router>
             <EnemyPokemonTeamProvider>
-                <BagProvider>
-                    <BattleProvider>
-                        <ProvidedApp/>
-                    </BattleProvider>
-                </BagProvider>
+                <PokemonTeamProvider>
+                    <BagProvider>
+                        <BattleProvider>
+                            <ProvidedApp/>
+                        </BattleProvider>
+                    </BagProvider>
+                </PokemonTeamProvider>
             </EnemyPokemonTeamProvider>
-        </PokemonTeamProvider>
-    </Router>
-  );
+        </Router>
+    );
 }
 
 export default App;

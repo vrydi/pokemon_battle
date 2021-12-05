@@ -25,10 +25,13 @@ function PokemonButton () {
     const clickButton = () => {
         setMessage('Generating...')
         generateEnemyTeam()
-        generateTeam().then(()=>{
-            setMessage('Generate your team')
-            setShowToast(true)
-        })
+            .then(()=>{
+                generateTeam().then(()=>{
+                    setMessage('Generate your team')
+                    setShowToast(true)
+                    window.location.reload()
+                })
+            })
     }
 
     return <div className={'text-center'}>
