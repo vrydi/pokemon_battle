@@ -42,6 +42,9 @@ export function BattleProvider(props) {
         move.currentPP--
         if (executor.stats.statusEffect.includes('asleep')) {
             setMessage(`${executor.name} is asleep`)
+            if (Math.random() * 100 <= 25) {
+                executor.stats.forEach(status=>executor.stats.statusEffect = executor.stats.statusEffect.filter(effect=>status!==effect))
+            }
             return null
         }
         if (executor.stats.statusEffect.includes('paralysed')) {

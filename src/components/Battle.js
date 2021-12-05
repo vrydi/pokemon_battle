@@ -22,8 +22,8 @@ export function BattleSection() {
     const {activeEnemyPokemon} = useEnemyPokemonTeamContext()
     const {pokeMenu} = useBattleContext()
 
-    return <section>
-        <Container id={'battle'} className={'p-0 mt-5'}>
+    return <section id={'battleSection'}>
+        <Container id={'battle'} className={'p-0 mt-2'}>
             {pokeMenu === 'pokemon' ? <PokemonChangeMenu pokemonTeam={pokemonTeam}/> :
                 pokeMenu === 'bag' ? <BagScreen/> :
                     <>

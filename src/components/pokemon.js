@@ -6,7 +6,7 @@ import {useEnemyPokemonTeamContext} from "../contexts/EnemyPokemonTeam";
 
 export function PokemonSection() {
     return <Container fluid className={'px-5 mt-3'}>
-        <fieldset className={'border border-3 px-4 py-2'} style={{borderRadius: '25px'}}>
+        <fieldset className={'border border-3 px-4 py-3 a'} style={{borderRadius: '25px'}}>
             <div className={'d-flex justify-content-around'}>
                 <h1>My Team</h1>
                 <PokemonButton/>
