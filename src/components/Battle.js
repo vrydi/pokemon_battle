@@ -20,13 +20,12 @@ import {useBattleContext} from "../contexts/BattleContext";
 export function BattleSection() {
     const {pokemonTeam, activePokemon} = usePokemonTeamContext()
     const {activeEnemyPokemon} = useEnemyPokemonTeamContext()
-    const [pokeMenu, setPokeMenu] = useState('start')
+    const {pokeMenu} = useBattleContext()
 
     return <section>
         <Container id={'battle'} className={'p-0 mt-5'}>
-            {pokeMenu === 'pokemon' ? <PokemonChangeMenu pokemonTeam={pokemonTeam}
-                                                         setPokeMenu={setPokeMenu}/> :
-                pokeMenu === 'bag' ? <BagScreen setPokeMenu={setPokeMenu}/> :
+            {pokeMenu === 'pokemon' ? <PokemonChangeMenu pokemonTeam={pokemonTeam}/> :
+                pokeMenu === 'bag' ? <BagScreen/> :
                     <>
                         <div className={'d-flex battle-screen'}>
                             <Col lg={6} className={'left-field'}>
@@ -64,9 +63,9 @@ export function BattleSection() {
                                 </Row>
                             </Col>
                         </div>
-                        {pokeMenu === 'start' && <PokeOptions activePokemon={activePokemon} setPokeMenu={setPokeMenu}/>}
+                        {pokeMenu === 'start' && <PokeOptions/>}
                         {pokeMenu === 'battle' &&
-                        <PokeBattleButton moves={activePokemon.moves} setPokeMenu={setPokeMenu}/>}
+                        <PokeBattleButton moves={activePokemon.moves}/>}
                     </>
             }
         </Container>
@@ -75,14 +74,14 @@ export function BattleSection() {
 
 export function isNotEmpty(object) { for(const i in object) { return true; } return false; }
 
-function BagScreen(props) {
+function BagScreen() {
     const {bag} = useBagContext()
     const [target, setTarget] = useState({})
     const [targetItem, setTargetItem] = useState({})
     const [targetMove, setTargetMove] = useState({})
     const [modalShow, setModalShow] = useState(false)
     const {pokemonTeam, updateTeam} = usePokemonTeamContext()
-    const {setPokeMenu} = props
+    const {setPokeMenu} = useBattleContext()
 
     useEffect(()=>{
         if (isNotEmpty(target) && isNotEmpty(targetItem)){
@@ -99,7 +98,7 @@ function BagScreen(props) {
                     updateTeam(pokemonTeam)
                     break
                 case 'fresh water':
-                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHealth = target.stats.currentHealth + 30 > target.stats.health ? target.stats.currentHealth = target.stats.health : target.stats.currentHealth += 30
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHealth.base_stat = target.stats.currentHealth.base_stat + 30 > target.stats.health.base_stat ? target.stats.currentHealth.base_stat = target.stats.health.base_stat : target.stats.currentHealth.base_stat += 30
                     bag.find(item=>item.name==='fresh water').amount--
                     setTarget({})
                     setTargetItem({})
@@ -116,7 +115,7 @@ function BagScreen(props) {
                     break
                 case 'full restore':
                     pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.statusEffect = target.stats.statusEffect.includes('fainted') ? ['fainted'] : []
-                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHealth = target.stats.health
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHealth.base_stat = target.stats.health.base_stat
                     bag.find(item=>item.name==='full restore').amount--
                     setTarget({})
                     setTargetItem({})
@@ -125,7 +124,7 @@ function BagScreen(props) {
                     break
                 case 'revive':
                     pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.statusEffect.filter(status=>status!=='fainted')
-                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHealth = Math.round(target.stats.health / 2)
+                    pokemonTeam.find(pokemon=>pokemon.id===target.id).stats.currentHealth.base_stat = Math.round(target.stats.health.base_stat / 2)
                     bag.find(item=>item.name==='revive').amount--
                     setTarget({})
                     setTargetItem({})
@@ -271,13 +270,13 @@ function PokeItemChooseModal(props) {
 }
 
 function PokemonChangeMenu(props) {
-    const {pokemonTeam, setPokeMenu} = props
+    const {pokemonTeam} = props
+    const {setPokeMenu} = useBattleContext()
     const {activePokemon} = usePokemonTeamContext()
     return <Container>
         <Row lg={2} className={'g-4'}>
             {pokemonTeam.map((pokemon, i) => <PokeChangeFrames key={i}
                                                                activePokemon={activePokemon.name === pokemon.name}
-                                                               setPokeMenu={setPokeMenu}
                                                                pokemon={pokemon}/>)}
         </Row>
         <div className={'mt-3'}>
@@ -289,7 +288,8 @@ function PokemonChangeMenu(props) {
 
 function PokeChangeFrames(props) {
     const {setActivePokemon} = usePokemonTeamContext()
-    const {pokemon, activePokemon, setPokeMenu} = props
+    const {setPokeMenu} = useBattleContext()
+    const {pokemon, activePokemon} = props
     const gender = GetGender(pokemon.gender)
     console.log(pokemon)
     const changePokemon = (pokemon) => {
@@ -344,13 +344,14 @@ const getEffectColour = (effect) => {
     switch (effect) {
         case 'fainted':
             return 'danger'
-        case 'burn':
+        case 'burned':
             return 'warning'
-        case 'confusion':
+        case 'confused':
         case 'paralysed':
             return 'secondary'
-        case 'poison' :
+        case 'poisoned':
             return 'primary'
+        case 'asleep':
         default:
             return 'info'
     }
@@ -362,16 +363,12 @@ function PokeStatus(props) {
     return <Badge className={'p-2'} pill bg={effect}>{status}</Badge>
 }
 
-function PokeOptions(props) {
-    const {activePokemon, setPokeMenu} = props
-    const [message, setMessage] = useState(`What will ${activePokemon.name} do?`)
-
+function PokeOptions() {
     return <RoundedDiv color={'bg-green'}>
         <div className={'p-2 battle-option-screen m-0 d-flex'}>
-            <PokeMessage message={message}/>
+            <PokeMessage/>
             <Col lg={6} className={'m-0 bg-beige row rounded-3'}>
-                <PokeStartButton buttons={['fight', 'pokemon', 'bag', 'flee']} setMessage={setMessage}
-                                 setPokeMenu={setPokeMenu} pokemon={activePokemon}/>
+                <PokeStartButton buttons={['fight', 'pokemon', 'bag', 'flee']}/>
             </Col>
         </div>
     </RoundedDiv>
@@ -384,8 +381,8 @@ function RoundedDiv(props) {
     </div>
 }
 
-function PokeMessage(props) {
-    const {message} = props
+function PokeMessage() {
+    const {message} = useBattleContext()
     return <Col lg={6} className={'m-0'}>
         <RoundedDiv color={'bg-green'}>
             <RoundedDiv color={'bg-yellow'}>
@@ -400,7 +397,8 @@ function PokeMessage(props) {
 }
 
 function PokeBattleButton(props) {
-    const {setPokeMenu, moves} = props
+    const {moves} = props
+    const {setPokeMenu} = useBattleContext()
     console.log(moves)
 
     return <RoundedDiv color={'bg-green'}>
@@ -418,11 +416,13 @@ function PokeBattleButton(props) {
 
 function PokeMoveButton(props) {
     const {move} = props
-    const {battle} = useBattleContext()
+    const {battle, setPokeMenu} = useBattleContext()
+
     console.log(move)
 
     const battleTime = () => {
         battle(move)
+        setPokeMenu('start')
     }
 
     return <Col>
@@ -440,13 +440,16 @@ function PokeMoveButton(props) {
 }
 
 function PokeStartButton(props) {
-    const {buttons, setMessage, setPokeMenu, pokemon} = props
+    const {buttons} = props
+    const {setPokeMenu, setMessage, fighting} = useBattleContext()
+    const {activePokemon} = usePokemonTeamContext()
+
     const history = useHistory()
 
     const click = (button) => {
         switch (button) {
             case 'fight' :
-                if (!pokemon.stats.statusEffect.includes('fainted')) {
+                if (!activePokemon.stats.statusEffect.includes('fainted')) {
                     setPokeMenu('battle')
                 }
                 break
@@ -460,6 +463,7 @@ function PokeStartButton(props) {
                 setMessage('you have fled')
                 setTimeout(function () {
                     history.push('/')
+                    setMessage(`What will ${activePokemon.name} do?`)
                 }, 1000)
                 break
             default:
@@ -470,7 +474,7 @@ function PokeStartButton(props) {
         {buttons.map((button, i) => {
             return <Col lg={6} key={i}>
                 <button onClick={() => click(button)}
-                        className={`poke-option-button w-100 btn ${button}`}>{button}</button>
+                        className={`poke-option-button w-100 btn ${button}`} disabled={fighting}>{button}</button>
             </Col>
         })}
     </>
